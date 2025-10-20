@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日自律计划 - 管理你的每一天</title>
+    <style>
+        /* 主题变量系统 */
+        :root {
+            /* 基础变量 */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            --spacing-1: 0.25rem;
+            --spacing-2: 0.5rem;
+            --spacing-3: 0.75rem;
+            --spacing-4: 1rem;
+            --spacing-6: 1.5rem;
+            --spacing-8: 2rem;
+            --spacing-12: 3rem;
+        }
+
+        /* 兰兰的粉色主题 */
+        .lanlan-theme {
+            --bg-primary: #fff5f7;
+            --bg-secondary: #fff0f3;
+            --bg-tertiary: #ffe6eb;
+            --text-primary: #6d2e46;
+            --text-secondary: #8a4c63;
+            --text-muted: #b88da1;
+            --accent-primary: #ff75a0;
+            --accent-secondary: #ff96b8;
+            --success: #ffb347;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --border-color: #ffccd5;
+            --shadow-sm: 0 2px 4px rgba(255, 117, 160, 0.1);
+            --shadow-md: 0 4px 8px rgba(255, 117, 160, 0.15);
+            --shadow-lg: 0 10px 15px -3px rgba(255, 117, 160, 0.15), 0 4px 6px -2px rgba(255, 117, 160, 0.1);
+        }
+
+        /* 先先的蓝色主题 */
+        .xianxian-theme {
+            --bg-primary: #f0f7ff;
+            --bg-secondary: #e6f0ff;
+            --bg-tertiary: #cce0ff;
+            --text-primary: #1a365d;
+            --text-secondary: #2c5282;
+            --text-muted: #718096;
+            --accent-primary: #4299e1;
+            --accent-secondary: #63b3ed;
+            --success: #38a169;
+            --danger: #e53e3e;
+            --warning: #d69e2e;
+            --border-color: #bde0fe;
+            --shadow-sm: 0 2px 4px rgba(66, 153, 225, 0.1);
+            --shadow-md: 0 4px 8px rgba(66, 153, 225, 0.15);
+            --shadow-lg: 0 10px 15px -3px rgba(66, 153, 225, 0.15), 0 4px 6px -2px rgba(66, 153, 225, 0.1);
+        }
+
+        /* 深色主题 - 兰兰 */
+        .dark-theme.lanlan-theme {
+            --bg-primary: #2d1621;
+            --bg-secondary: #3d1d2a;
+            --bg-tertiary: #4d2433;
+            --text-primary: #ffccd5;
+            --text-secondary: #ffb3c1;
+            --text-muted: #e68fa3;
+            --accent-primary: #ff75a0;
+            --accent-secondary: #ff96b8;
+            --success: #ffb347;
+            --danger: #ff7675;
+            --warning: #ffb74d;
+            --border-color: #6d4c41;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 深色主题 - 先先 */
+        .dark-theme.xianxian-theme {
+            --bg-primary: #1a202c;
+            --bg-secondary: #2d3748;
+            --bg-tertiary: #4a5568;
+            --text-primary: #e2e8f0;
+            --text-secondary: #cbd5e0;
+            --text-muted: #a0aec0;
+            --accent-primary: #4299e1;
+            --accent-secondary: #63b3ed;
+            --success: #48bb78;
+            --danger: #f56565;
+            --warning: #ed8936;
+            --border-color: #4a5568;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 全局重置与基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: var(--spacing-4);
+            min-height: 100vh;
+        }
+
+        /* 用户计划板块 */
+        .user-planner {
+            margin-bottom: var(--spacing-8);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform var(--transition-fast);
+        }
+
+        .user-planner:hover {
+            transform: translateY(-2px);
+        }
+
+        .user-header {
+            padding: var(--spacing-4);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+        }
+
+        .lanlan-theme .user-header {
+            background-color: var(--accent-primary);
+        }
+
+        .xianxian-theme .user-header {
+            background-color: var(--accent-primary);
+        }
+
+        .user-content {
+            padding: var(--spacing-6);
+            background-color: var(--bg-secondary);
+        }
+
+        /* 用户切换器 */
+        .user-selector {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .user-btn {
+            padding: var(--spacing-2) var(--spacing-6);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .user-btn.lanlan {
+            background-color: #ff75a0;
+            color: white;
+        }
+
+        .user-btn.xianxian {
+            background-color: #4299e1;
+            color: white;
+        }
+
+        .user-btn.active {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* 双用户视图布局 */
+        .dual-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-6);
+        }
+
+        @media (max-width: 768px) {
+            .dual-view {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background-color: var(--bg-secondary);
+            padding: var(--spacing-4);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-6);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .navbar .nav-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-fast);
+        }
+
+        .navbar .nav-link:hover {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+        }
+
+        /* 容器样式 */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: var(--spacing-4);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 月份导航 */
+        .month-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-6);
+        }
+
+        .month-nav h2 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+        }
+
+        .month-nav button {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: none;
+            padding: var(--spacing-2) var(--spacing-4);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+        }
+
+        .month-nav button:hover {
+            background-color: var(--border-color);
+            transform: translateY(-2px);
+        }
+
+        /* 日历样式 */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--spacing-2);
+            margin-bottom: var(--spacing-8);
+        }
+
+        .calendar-header {
+            font-weight: bold;
+            text-align: center;
+            padding: var(--spacing-2);
+            color: var(--text-secondary);
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            position: relative;
+            font-weight: 500;
+        }
+
+        .calendar-day:hover:not(.empty) {
+            background-color: var(--border-color);
+            transform: scale(1.05);
+        }
+
+        .calendar-day.empty {
+            background-color: transparent;
+            cursor: default;
+        }
+
+        .calendar-day.current {
+            border: 2px solid var(--accent-primary);
+            font-weight: bold;
+        }
+
+        .calendar-day.planned {
+            color: var(--danger);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .calendar-day.completed {
+            color: var(--success);
+            background-color: rgba(249, 168, 38, 0.1);
+        }
+
+        /* 当前时间显示 */
+        .current-time {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            padding: var(--spacing-2) var(--spacing-4);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin: var(--spacing-3) 0;
+            display: inline-block;
+        }
+        
+        /* 计划输入区域 */
+        .plan-input-section {
+            margin-top: var(--spacing-6);
+            padding: var(--spacing-4);
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .plan-input-section h3 {
+            margin-bottom: var(--spacing-4);
+            color: var(--text-primary);
+        }
+
+        .plan-date-display {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-4);
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-2);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: var(--spacing-3);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color var(--transition-fast);
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--spacing-3);
+            margin-top: var(--spacing-4);
+        }
+
+        .btn {
+            padding: var(--spacing-2) var(--spacing-4);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: var(--warning);
+        }
+
+        /* 任务列表 */
+        .task-list {
+            margin-top: var(--spacing-4);
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-3);
+            padding: var(--spacing-3);
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-2);
+            transition: all var(--transition-fast);
+        }
+
+        .task-item:hover {
+            background-color: var(--bg-secondary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .task-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .task-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-1);
+        }
+
+        .task-text {
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .task-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .task-item.completed-task .task-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .task-delete {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            transition: opacity var(--transition-fast);
+            padding: var(--spacing-1);
+            flex-shrink: 0;
+        }
+
+        .task-delete:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        /* 任务优先级样式 */
+        .priority-high {
+            border-left: 3px solid var(--danger);
+            background-color: rgba(239, 68, 68, 0.05);
+        }
+        
+        .priority-medium {
+            border-left: 3px solid var(--warning);
+            background-color: rgba(245, 158, 11, 0.05);
+        }
+        
+        .priority-low {
+            border-left: 3px solid var(--success);
+            background-color: rgba(34, 197, 94, 0.05);
+        }
+        
+        .priority-normal {
+            border-left: 3px solid var(--info);
+        }
+
+        /* 统计信息 */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .stat-card {
+            background-color: var(--bg-primary);
+            padding: var(--spacing-4);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-primary);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .calendar {
+                gap: var(--spacing-1);
+            }
+
+            .calendar-day {
+                font-size: 0.9rem;
+            }
+
+            .month-nav h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: var(--spacing-2);
+            }
+
+            .calendar-day {
+                font-size: 0.8rem;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: var(--spacing-2);
+                text-align: center;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>双人自律计划</h1>
+        <div class="current-time" id="currentTime"></div>
+        <a href="memory_album.html" class="nav-link">返回相册</a>
+    </div>
+
+    <div class="user-selector">
+        <button id="viewLanlanBtn" class="user-btn lanlan">兰兰</button>
+        <button id="viewXianxianBtn" class="user-btn xianxian">先先</button>
+        <button id="viewBothBtn" class="user-btn active">同时查看</button>
+    </div>
+
+    <div class="container">
+        <!-- 双用户视图 -->
+        <div id="dualView" class="dual-view">
+            <!-- 兰兰的计划板块 -->
+            <div id="lanlanPlanner" class="user-planner lanlan-theme">
+                <div class="user-header">兰兰的计划</div>
+                <div class="user-content">
+                    <!-- 月份导航 -->
+                    <div class="month-nav">
+                        <button class="prev-month">‹ 上个月</button>
+                        <h2 class="current-month"></h2>
+                        <button class="next-month">下个月 ›</button>
+                    </div>
+
+                    <!-- 统计信息 -->
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-value completed-count">0</div>
+                            <div class="stat-label">已完成计划</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value planned-count">0</div>
+                            <div class="stat-label">进行中计划</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value completion-rate">0%</div>
+                            <div class="stat-label">完成率</div>
+                        </div>
+                    </div>
+
+                    <!-- 日历 -->
+                    <div class="calendar">
+                        <div class="calendar-header">日</div>
+                        <div class="calendar-header">一</div>
+                        <div class="calendar-header">二</div>
+                        <div class="calendar-header">三</div>
+                        <div class="calendar-header">四</div>
+                        <div class="calendar-header">五</div>
+                        <div class="calendar-header">六</div>
+                        <!-- 日历单元格将由JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 先先的计划板块 -->
+            <div id="xianxianPlanner" class="user-planner xianxian-theme">
+                <div class="user-header">先先的计划</div>
+                <div class="user-content">
+                    <!-- 月份导航 -->
+                    <div class="month-nav">
+                        <button class="prev-month">‹ 上个月</button>
+                        <h2 class="current-month"></h2>
+                        <button class="next-month">下个月 ›</button>
+                    </div>
+
+                    <!-- 统计信息 -->
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-value completed-count">0</div>
+                            <div class="stat-label">已完成计划</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value planned-count">0</div>
+                            <div class="stat-label">进行中计划</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value completion-rate">0%</div>
+                            <div class="stat-label">完成率</div>
+                        </div>
+                    </div>
+
+                    <!-- 日历 -->
+                    <div class="calendar">
+                        <div class="calendar-header">日</div>
+                        <div class="calendar-header">一</div>
+                        <div class="calendar-header">二</div>
+                        <div class="calendar-header">三</div>
+                        <div class="calendar-header">四</div>
+                        <div class="calendar-header">五</div>
+                        <div class="calendar-header">六</div>
+                        <!-- 日历单元格将由JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 单人视图容器 -->
+        <div id="singleView" class="user-planner" style="display: none;">
+            <div class="user-header"></div>
+            <div class="user-content">
+                <!-- 月份导航 -->
+                <div class="month-nav">
+                    <button class="prev-month">‹ 上个月</button>
+                    <h2 class="current-month"></h2>
+                    <button class="next-month">下个月 ›</button>
+                </div>
+
+                <!-- 统计信息 -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value completed-count">0</div>
+                        <div class="stat-label">已完成计划</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value planned-count">0</div>
+                        <div class="stat-label">进行中计划</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value completion-rate">0%</div>
+                        <div class="stat-label">完成率</div>
+                    </div>
+                </div>
+
+                <!-- 日历 -->
+                <div class="calendar">
+                    <div class="calendar-header">日</div>
+                    <div class="calendar-header">一</div>
+                    <div class="calendar-header">二</div>
+                    <div class="calendar-header">三</div>
+                    <div class="calendar-header">四</div>
+                    <div class="calendar-header">五</div>
+                    <div class="calendar-header">六</div>
+                    <!-- 日历单元格将由JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+        <!-- 月份导航 -->
+        <div class="month-nav">
+            <button id="prevMonth">‹ 上个月</button>
+            <h2 id="currentMonth"></h2>
+            <button id="nextMonth">下个月 ›</button>
+        </div>
+
+        <!-- 统计信息 -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="completedCount">0</div>
+                <div class="stat-label">已完成计划</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="plannedCount">0</div>
+                <div class="stat-label">进行中计划</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="completionRate">0%</div>
+                <div class="stat-label">完成率</div>
+            </div>
+        </div>
+
+        <!-- 日历 -->
+        <div class="calendar">
+            <div class="calendar-header">日</div>
+            <div class="calendar-header">一</div>
+            <div class="calendar-header">二</div>
+            <div class="calendar-header">三</div>
+            <div class="calendar-header">四</div>
+            <div class="calendar-header">五</div>
+            <div class="calendar-header">六</div>
+            <!-- 日历单元格将由JavaScript动态生成 -->
+        </div>
+
+        <!-- 计划输入区域 -->
+        <div id="planInputSection" class="plan-input-section" style="display: none;">
+            <div class="plan-date-display" id="selectedDateDisplay"></div>
+            <h3 id="planTitle">添加自律计划</h3>
+            
+            <div class="form-group">
+                <label for="planDescription">计划描述</label>
+                <textarea id="planDescription" placeholder="描述你的自律计划..."></textarea>
+            </div>
+
+            <h4>具体任务</h4>
+            <div id="taskList" class="task-list">
+                <!-- 任务项将由JavaScript动态生成 -->
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="newTaskInput" placeholder="添加新任务" style="width: 100%; padding: var(--spacing-2); border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: var(--spacing-2);">
+                <button id="addTaskBtn" class="btn btn-secondary">添加任务</button>
+            </div>
+
+            <div class="form-actions">
+                <button id="savePlanBtn" class="btn btn-primary">保存计划</button>
+                <button id="markAsCompletedBtn" class="btn btn-success">标记为已完成</button>
+                <button id="cancelPlanBtn" class="btn btn-secondary">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentDate = new Date();
+        let currentUser = 'lanlan'; // 当前活动用户
+        let editingUser = null; // 当前正在编辑的用户
+        let selectedDate = null;
+        let currentTasks = [];
+        
+        // 用户数据
+        let userData = {
+            lanlan: JSON.parse(localStorage.getItem('autonomyPlans_lanlan')) || {},
+            xianxian: JSON.parse(localStorage.getItem('autonomyPlans_xianxian')) || {}
+        };
+        
+        // 导入导出相关变量
+        const importExportContainer = document.createElement('div');
+        importExportContainer.className = 'import-export-container';
+        importExportContainer.innerHTML = `
+            <div class="import-export-buttons">
+                <button id="exportPlannerBtn" class="btn btn-secondary">导出计划</button>
+                <input type="file" id="importPlannerFile" accept=".json" style="display: none;">
+                <button id="importPlannerBtn" class="btn btn-secondary">导入计划</button>
+            </div>
+            <div id="importExportStatus" class="status-message"></div>
+        `;
+        document.addEventListener('DOMContentLoaded', () => {
+            // 将导入导出按钮添加到页面顶部
+            const topContainer = document.querySelector('.navbar') || document.body;
+            topContainer.parentNode.insertBefore(importExportContainer, topContainer.nextSibling);
+            
+            // 添加事件监听器
+            document.getElementById('exportPlannerBtn').addEventListener('click', exportPlannerData);
+            document.getElementById('importPlannerBtn').addEventListener('click', () => {
+                document.getElementById('importPlannerFile').click();
+            });
+            document.getElementById('importPlannerFile').addEventListener('change', importPlannerData);
+        });
+
+        // 初始化
+        function init() {
+            // 渲染两个用户的日历
+            renderCalendars();
+            setupEventListeners();
+        }
+
+        // 渲染所有日历
+        function renderCalendars() {
+            // 渲染兰兰的日历
+            renderCalendar('lanlan');
+            updateStats('lanlan');
+            
+            // 渲染先先的日历
+            renderCalendar('xianxian');
+            updateStats('xianxian');
+        }
+
+        // 渲染指定用户的日历
+        function renderCalendar(user) {
+            let calendar;
+            let currentMonthElement;
+            
+            if (document.getElementById('dualView').style.display !== 'none') {
+                // 双视图模式
+                calendar = document.querySelector(`#${user}Planner .calendar`);
+                currentMonthElement = document.querySelector(`#${user}Planner .current-month`);
+            } else {
+                // 单视图模式
+                calendar = document.querySelector('#singleView .calendar');
+                currentMonthElement = document.querySelector('#singleView .current-month');
+            }
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // 使用currentDate更新月份显示
+            currentMonthElement.textContent = `${year}年${month + 1}月`;
+            
+            // 清空日历
+            while (calendar.children.length > 7) { // 保留表头
+                calendar.removeChild(calendar.lastChild);
+            }
+            
+            // 获取当月第一天是星期几
+            const firstDay = new Date(year, month, 1).getDay();
+            
+            // 获取当月的天数
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            // 添加空白单元格
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendar.appendChild(emptyDay);
+            }
+            
+            // 获取今天的日期
+            const today = new Date();
+            const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
+            
+            // 添加日期单元格
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateCell = document.createElement('div');
+                dateCell.className = 'calendar-day';
+                dateCell.textContent = day;
+                
+                // 标记今天
+                if (isCurrentMonth && today.getDate() === day) {
+                    dateCell.classList.add('current');
+                }
+                
+                // 检查是否有计划
+                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const plan = userData[user][dateKey];
+                
+                if (plan) {
+                    if (plan.completed) {
+                        dateCell.classList.add('completed');
+                    } else {
+                        dateCell.classList.add('planned');
+                    }
+                }
+                
+                // 添加点击事件
+                dateCell.addEventListener('click', () => {
+                    editingUser = user;
+                    selectedDate = dateKey;
+                    showPlanInput(day, month, year, user);
+                });
+                
+                calendar.appendChild(dateCell);
+            }
+        }
+
+        // 显示计划输入区域
+        function showPlanInput(day, month, year, user) {
+            const planInputSection = document.getElementById('planInputSection');
+            const selectedDateDisplay = document.getElementById('selectedDateDisplay');
+            const planTitle = document.getElementById('planTitle');
+            const planDescription = document.getElementById('planDescription');
+            const taskList = document.getElementById('taskList');
+            
+            // 设置标题和日期显示
+            planTitle.textContent = `${user === 'lanlan' ? '兰兰' : '先先'}的计划`;
+            
+            // 使用当前系统时间更新日期显示，而不是点击的日期
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1;
+            const currentDay = now.getDate();
+            selectedDateDisplay.textContent = `${currentYear}年${currentMonth}月${currentDay}日`;
+            
+            // 更新selectedDate为当前日期
+            selectedDate = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`;
+            
+            // 清空任务列表
+            taskList.innerHTML = '';
+            currentTasks = [];
+            
+            // 加载现有计划
+            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const plan = userData[user][dateKey];
+            
+            if (plan) {
+                planDescription.value = plan.description || '';
+                currentTasks = plan.tasks || [];
+                
+                // 渲染任务列表
+                currentTasks.forEach((task, index) => {
+                    addTaskToDOM(task.text, task.completed, index);
+                });
+                
+                // 更新完成按钮状态
+                updateCompletedButton(plan.completed);
+            } else {
+                planDescription.value = '';
+                updateCompletedButton(false);
+            }
+            
+            // 根据用户设置输入区域的主题
+            if (user === 'lanlan') {
+                planInputSection.classList.remove('xianxian-theme');
+                planInputSection.classList.add('lanlan-theme');
+            } else {
+                planInputSection.classList.remove('lanlan-theme');
+                planInputSection.classList.add('xianxian-theme');
+            }
+            
+            // 显示输入区域
+            planInputSection.style.display = 'block';
+            planInputSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 添加任务到DOM
+        function addTaskToDOM(taskText, isCompleted, index) {
+            const taskList = document.getElementById('taskList');
+            const taskItem = document.createElement('div');
+            
+            // 获取任务对象以获取更多信息
+            const task = currentTasks[index];
+            const taskTime = task && task.timestamp ? new Date(task.timestamp).toLocaleTimeString() : '';
+            const priorityClass = task && task.priority ? `priority-${task.priority}` : '';
+            
+            taskItem.className = `task-item ${isCompleted ? 'completed-task' : ''} ${priorityClass}`;
+            
+            taskItem.innerHTML = `
+                <input type="checkbox" ${isCompleted ? 'checked' : ''} data-index="${index}">
+                <div class="task-content">
+                    <span class="task-text">${taskText}</span>
+                    ${taskTime ? `<span class="task-time">${taskTime}</span>` : ''}
+                </div>
+                <button class="task-delete" data-index="${index}">×</button>
+            `;
+            
+            // 添加事件监听器
+            const checkbox = taskItem.querySelector('input[type="checkbox"]');
+            checkbox.addEventListener('change', (e) => {
+                const taskIndex = parseInt(e.target.getAttribute('data-index'));
+                currentTasks[taskIndex].completed = e.target.checked;
+                
+                if (e.target.checked) {
+                    taskItem.classList.add('completed-task');
+                } else {
+                    taskItem.classList.remove('completed-task');
+                }
+                
+                // 检查是否所有任务都已完成
+                const allCompleted = currentTasks.length > 0 && currentTasks.every(task => task.completed);
+                updateCompletedButton(allCompleted);
+            });
+            
+            const deleteBtn = taskItem.querySelector('button');
+            deleteBtn.addEventListener('click', (e) => {
+                const taskIndex = parseInt(e.target.getAttribute('data-index'));
+                currentTasks.splice(taskIndex, 1);
+                taskList.removeChild(taskItem);
+                
+                // 更新剩余任务的索引
+                updateTaskIndices();
+            });
+            
+            taskList.appendChild(taskItem);
+        }
+        
+        // 添加导入导出相关的样式
+        const importExportStyles = document.createElement('style');
+        importExportStyles.textContent = `
+            .import-export-container {
+                margin-bottom: var(--spacing-6);
+                text-align: center;
+            }
+            .import-export-buttons {
+                display: flex;
+                gap: var(--spacing-4);
+                justify-content: center;
+                margin-bottom: var(--spacing-2);
+            }
+            .status-message {
+                padding: var(--spacing-2);
+                border-radius: var(--radius-md);
+                font-size: 0.9rem;
+                transition: opacity 0.3s ease;
+            }
+            .status-message.success {
+                background-color: rgba(72, 187, 120, 0.1);
+                color: #2f855a;
+                border: 1px solid rgba(72, 187, 120, 0.3);
+            }
+            .status-message.error {
+                background-color: rgba(239, 68, 68, 0.1);
+                color: #c53030;
+                border: 1px solid rgba(239, 68, 68, 0.3);
+            }
+        `;
+        document.head.appendChild(importExportStyles);
+
+        // 更新任务索引
+        function updateTaskIndices() {
+            const taskItems = document.querySelectorAll('.task-item');
+            taskItems.forEach((item, index) => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                const deleteBtn = item.querySelector('button');
+                
+                checkbox.setAttribute('data-index', index);
+                deleteBtn.setAttribute('data-index', index);
+                
+                // 更新任务在currentTasks中的索引
+                if (currentTasks[index]) {
+                    currentTasks[index].index = index;
+                }
+            });
+        }
+
+        // 更新完成按钮
+        function updateCompletedButton(isCompleted) {
+            const markAsCompletedBtn = document.getElementById('markAsCompletedBtn');
+            
+            if (isCompleted) {
+                markAsCompletedBtn.textContent = '已完成';
+                markAsCompletedBtn.disabled = true;
+                markAsCompletedBtn.style.opacity = 0.7;
+            } else {
+                markAsCompletedBtn.textContent = '标记为已完成';
+                markAsCompletedBtn.disabled = false;
+                markAsCompletedBtn.style.opacity = 1;
+            }
+        }
+
+        // 保存计划
+        function savePlan() {
+            // 参数验证
+            if (!selectedDate || !editingUser || typeof editingUser !== 'string') {
+                console.error('保存失败：缺少必要参数');
+                showImportExportStatus('保存失败：数据不完整', 'error');
+                return false;
+            }
+            
+            // 获取计划描述
+            const planInput = document.getElementById('planDescription');
+            if (!planInput) {
+                console.error('保存失败：未找到计划输入元素');
+                return false;
+            }
+            
+            const planDescription = planInput.value.trim();
+            
+            // 检查是否有任务或描述
+            if (!planDescription && (!Array.isArray(currentTasks) || currentTasks.length === 0)) {
+                alert('请输入计划描述或添加任务');
+                return false;
+            }
+            
+            // 确保currentTasks是有效的数组
+            const safeTasks = Array.isArray(currentTasks) ? currentTasks : [];
+            
+            // 检查是否所有任务都已完成
+            const allTasksCompleted = safeTasks.length > 0 && safeTasks.every(task => task && task.completed);
+            
+            try {
+                // 确保userData对象结构完整
+                if (!userData || typeof userData !== 'object') {
+                    userData = {
+                        lanlan: {},
+                        xianxian: {}
+                    };
+                }
+                
+                if (!userData[editingUser] || typeof userData[editingUser] !== 'object') {
+                    userData[editingUser] = {};
+                }
+                
+                // 保存计划，验证并清理任务数据
+                const validatedTasks = safeTasks.map(task => ({
+                    text: task && typeof task.text === 'string' ? task.text.trim() : '',
+                    completed: task && typeof task.completed === 'boolean' ? task.completed : false,
+                    id: task && task.id ? task.id : Date.now().toString()
+                })).filter(task => task.text.length > 0); // 过滤空任务
+                
+                userData[editingUser][selectedDate] = {
+                    description: planDescription,
+                    tasks: validatedTasks,
+                    completed: allTasksCompleted,
+                    updatedAt: new Date().toISOString()
+                };
+                
+                // 尝试序列化数据
+                let jsonData;
+                try {
+                    jsonData = JSON.stringify(userData[editingUser]);
+                } catch (jsonError) {
+                    console.error('计划数据序列化失败:', jsonError);
+                    // 尝试简化数据后重新序列化
+                    const simplifiedData = { ...userData[editingUser] };
+                    // 对于每个日期的数据，限制任务数量
+                    Object.keys(simplifiedData).forEach(date => {
+                        if (simplifiedData[date] && simplifiedData[date].tasks && simplifiedData[date].tasks.length > 20) {
+                            simplifiedData[date].tasks = simplifiedData[date].tasks.slice(0, 20);
+                        }
+                    });
+                    jsonData = JSON.stringify(simplifiedData);
+                }
+                
+                // 保存到localStorage，添加存储空间检查
+                try {
+                    localStorage.setItem(`autonomyPlans_${editingUser}`, jsonData);
+                    console.log(`成功保存${editingUser}的计划数据`);
+                    
+                    // 使用更友好的提示替代alert
+                    showImportExportStatus('计划已成功保存', 'success');
+                    
+                    // 重新渲染日历和统计
+                    if (typeof renderCalendar === 'function') {
+                        renderCalendar(editingUser);
+                    }
+                    if (typeof updateStats === 'function') {
+                        updateStats(editingUser);
+                    }
+                    
+                    // 隐藏输入区域
+                    const planInputSection = document.getElementById('planInputSection');
+                    if (planInputSection) {
+                        planInputSection.style.display = 'none';
+                    }
+                    
+                    return true;
+                } catch (storageError) {
+                    console.error('localStorage保存失败:', storageError);
+                    
+                    // 存储空间不足的处理
+                    if (storageError.name === 'QuotaExceededError') {
+                        // 尝试清理旧数据
+                        try {
+                            // 获取所有日期并按时间排序
+                            const dates = Object.keys(userData[editingUser]).sort();
+                            if (dates.length > 100) {
+                                // 删除最早的50个日期的数据
+                                const datesToRemove = dates.slice(0, 50);
+                                datesToRemove.forEach(date => {
+                                    delete userData[editingUser][date];
+                                });
+                                
+                                // 重新保存简化后的数据
+                                localStorage.setItem(`autonomyPlans_${editingUser}`, JSON.stringify(userData[editingUser]));
+                                showImportExportStatus('存储空间不足，已清理部分旧数据并保存当前计划', 'warning');
+                                
+                                // 重新渲染
+                                if (typeof renderCalendar === 'function') {
+                                    renderCalendar(editingUser);
+                                }
+                                if (typeof updateStats === 'function') {
+                                    updateStats(editingUser);
+                                }
+                                
+                                // 隐藏输入区域
+                                const planInputSection = document.getElementById('planInputSection');
+                                if (planInputSection) {
+                                    planInputSection.style.display = 'none';
+                                }
+                                
+                                return true;
+                            }
+                        } catch (cleanupError) {
+                            console.error('清理旧数据失败:', cleanupError);
+                        }
+                    }
+                    
+                    showImportExportStatus('保存计划失败，请检查存储空间或稍后重试', 'error');
+                    return false;
+                }
+            } catch (error) {
+                console.error('保存计划过程中发生未知错误:', error);
+                showImportExportStatus('保存失败，请稍后重试', 'error');
+                return false;
+            }
+        }
+        
+        // 导出计划数据
+        function exportPlannerData() {
+            try {
+                // 检查是否有数据可导出
+                if (!userData || Object.keys(userData.lanlan).length === 0 && Object.keys(userData.xianxian).length === 0) {
+                    alert('当前没有计划数据可导出');
+                    return;
+                }
+                
+                // 创建导出数据的副本
+                const exportData = {
+                    version: '1.0',
+                    exportDate: new Date().toISOString(),
+                    userData: JSON.parse(JSON.stringify(userData)),
+                    metadata: {
+                        currentUser,
+                        exportTime: new Date().toISOString()
+                    }
+                };
+                
+                // 格式化JSON以提高可读性
+                const dataStr = JSON.stringify(exportData, null, 2);
+                
+                // 检查数据大小
+                if (dataStr.length > 5 * 1024 * 1024) { // 5MB
+                    alert('警告：导出的数据较大（超过5MB），可能会导致浏览器性能问题或导入失败。建议清理不必要的历史计划数据。');
+                }
+                
+                const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+                
+                // 生成带时间戳的文件名
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                const exportFileDefaultName = `autonomy-planner-${timestamp}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                
+                // 模拟点击下载
+                document.body.appendChild(linkElement);
+                linkElement.click();
+                document.body.removeChild(linkElement);
+                
+                showImportExportStatus(`成功导出计划数据！`, 'success');
+                console.log('计划数据导出成功');
+            } catch (error) {
+                console.error('导出数据失败:', error);
+                showImportExportStatus('导出数据失败，请重试', 'error');
+                alert('导出数据失败，请重试');
+            }
+        }
+        
+        // 导入计划数据
+        function importPlannerData(e) {
+            const file = e.target.files[0];
+            if (!file) {
+                return;
+            }
+            
+            // 检查文件类型
+            if (file.type && file.type !== 'application/json') {
+                showImportExportStatus('请选择JSON格式的文件', 'error');
+                alert('请选择JSON格式的文件');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // 验证导入数据的格式
+                    if (!importedData || typeof importedData !== 'object') {
+                        showImportExportStatus('导入失败：文件格式不正确', 'error');
+                        alert('导入失败：文件格式不正确');
+                        return;
+                    }
+                    
+                    // 兼容不同版本的数据格式
+                    let dataToImport = importedData;
+                    if (importedData.userData) {
+                        // 新格式，有版本和元数据
+                        dataToImport = importedData.userData;
+                    }
+                    
+                    // 验证计划数据的基本结构
+                    if (!dataToImport || typeof dataToImport !== 'object' || !dataToImport.lanlan || !dataToImport.xianxian) {
+                        showImportExportStatus('导入失败：文件缺少有效的计划数据', 'error');
+                        alert('导入失败：文件缺少有效的计划数据');
+                        return;
+                    }
+                    
+                    // 处理可能的大型数据导入问题
+                    try {
+                        // 尝试序列化一次以确保数据可以被保存
+                        JSON.stringify(dataToImport);
+                    } catch (serializationError) {
+                        console.error('数据序列化失败:', serializationError);
+                        showImportExportStatus('导入失败：数据格式正确但包含无法处理的内容', 'error');
+                        alert('导入失败：数据格式正确但包含无法处理的内容');
+                        return;
+                    }
+                    
+                    if (confirm(`导入将覆盖当前的计划数据，确定要继续吗？`)) {
+                        // 更新用户数据
+                        userData = dataToImport;
+                        
+                        // 保存导入的数据
+                        try {
+                            localStorage.setItem('autonomyPlans_lanlan', JSON.stringify(userData.lanlan));
+                            localStorage.setItem('autonomyPlans_xianxian', JSON.stringify(userData.xianxian));
+                            
+                            // 重新初始化页面
+                            init();
+                            
+                            // 恢复当前用户设置
+                            if (importedData.metadata && importedData.metadata.currentUser) {
+                                currentUser = importedData.metadata.currentUser;
+                                // 如果当前是单视图模式，需要更新视图
+                                const singleView = document.getElementById('singleView');
+                                if (singleView.style.display !== 'none') {
+                                    switchView(currentUser);
+                                }
+                            }
+                            
+                            showImportExportStatus(`成功导入计划数据！`, 'success');
+                            alert('成功导入计划数据！');
+                        } catch (saveError) {
+                            console.error('保存导入数据失败:', saveError);
+                            showImportExportStatus('导入成功但保存失败，请检查数据量', 'error');
+                            alert('导入成功但保存失败，请检查数据量是否过大');
+                        }
+                    }
+                } catch (error) {
+                    console.error('导入数据解析失败:', error);
+                    showImportExportStatus('导入失败：文件格式不正确或内容损坏', 'error');
+                    alert('导入失败：文件格式不正确或内容损坏');
+                } finally {
+                    // 清空文件输入，允许重复导入相同文件
+                    e.target.value = '';
+                }
+            };
+            
+            reader.onerror = () => {
+                showImportExportStatus('读取文件失败，请重试', 'error');
+                alert('读取文件失败，请重试');
+                // 清空文件输入
+                e.target.value = '';
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        // 显示导入导出状态信息
+        function showImportExportStatus(message, type = 'info') {
+            const statusElement = document.getElementById('importExportStatus');
+            statusElement.textContent = message;
+            statusElement.className = 'status-message';
+            statusElement.classList.add(type);
+            
+            // 3秒后自动清除状态信息
+            setTimeout(() => {
+                statusElement.textContent = '';
+                statusElement.className = 'status-message';
+            }, 3000);
+        }
+
+        // 标记为已完成
+        function markAsCompleted() {
+            if (!selectedDate || !editingUser) return;
+            
+            // 检查是否有计划
+            if (!userData[editingUser][selectedDate]) {
+                alert('请先保存计划');
+                return;
+            }
+            
+            // 标记所有任务为已完成
+            currentTasks.forEach(task => {
+                task.completed = true;
+            });
+            
+            // 更新DOM中的任务状态
+            const taskItems = document.querySelectorAll('.task-item');
+            taskItems.forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                checkbox.checked = true;
+                item.classList.add('completed-task');
+            });
+            
+            // 保存完成状态
+            userData[editingUser][selectedDate].completed = true;
+            userData[editingUser][selectedDate].tasks = currentTasks;
+            localStorage.setItem(`autonomyPlans_${editingUser}`, JSON.stringify(userData[editingUser]));
+            
+            // 更新按钮状态
+            updateCompletedButton(true);
+            
+            // 重新渲染日历和统计
+            renderCalendar(editingUser);
+            updateStats(editingUser);
+            
+            alert('已标记为完成');
+        }
+
+        // 更新指定用户的统计信息
+        function updateStats(user) {
+            // 确保userData和用户数据有效
+            if (!userData || !userData[user]) {
+                const completedCount = 0;
+                const plannedCount = 0;
+                const completionRate = 0;
+                
+                let completedElement, plannedElement, rateElement;
+                
+                if (document.getElementById('dualView').style.display !== 'none') {
+                    // 双视图模式
+                    completedElement = document.getElementById(`${user}Planner`).querySelector('#completedCount');
+                    plannedElement = document.getElementById(`${user}Planner`).querySelector('#plannedCount');
+                    rateElement = document.getElementById(`${user}Planner`).querySelector('#completionRate');
+                } else {
+                    // 单视图模式
+                    completedElement = document.querySelector('#singleView #completedCount');
+                    plannedElement = document.querySelector('#singleView #plannedCount');
+                    rateElement = document.querySelector('#singleView #completionRate');
+                }
+                
+                if (completedElement) completedElement.textContent = completedCount;
+                if (plannedElement) plannedElement.textContent = plannedCount;
+                if (rateElement) rateElement.textContent = `${completionRate}%`;
+                return;
+            }
+            
+            // 获取所有日期的计划
+            const datePlans = Object.values(userData[user]);
+            
+            // 统计所有任务
+            let totalTasks = 0;
+            let completedTasks = 0;
+            
+            datePlans.forEach(plan => {
+                if (plan && Array.isArray(plan.tasks)) {
+                    plan.tasks.forEach(task => {
+                        totalTasks++;
+                        if (task && task.completed) {
+                            completedTasks++;
+                        }
+                    });
+                }
+            });
+            
+            // 计算进行中任务数
+            const inProgressTasks = totalTasks - completedTasks;
+            
+            // 计算完成率
+            const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            
+            let completedElement, plannedElement, rateElement;
+            
+            if (document.getElementById('dualView').style.display !== 'none') {
+                // 双视图模式
+                completedElement = document.getElementById(`${user}Planner`).querySelector('#completedCount');
+                plannedElement = document.getElementById(`${user}Planner`).querySelector('#plannedCount');
+                rateElement = document.getElementById(`${user}Planner`).querySelector('#completionRate');
+            } else {
+                // 单视图模式
+                completedElement = document.querySelector('#singleView #completedCount');
+                plannedElement = document.querySelector('#singleView #plannedCount');
+                rateElement = document.querySelector('#singleView #completionRate');
+            }
+            
+            if (completedElement) completedElement.textContent = completedTasks;
+            if (plannedElement) plannedElement.textContent = inProgressTasks;
+            if (rateElement) rateElement.textContent = `${completionRate}%`;
+        }
+
+        // 切换视图模式（单用户/双用户）
+        function switchView(viewType) {
+            const dualView = document.getElementById('dualView');
+            const singleView = document.getElementById('singleView');
+            
+            // 重置按钮状态
+            document.querySelectorAll('.user-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (viewType === 'both') {
+                dualView.style.display = 'grid';
+                singleView.style.display = 'none';
+                document.getElementById('viewBothBtn').classList.add('active');
+                renderCalendars();
+            } else {
+                dualView.style.display = 'none';
+                singleView.style.display = 'block';
+                
+                // 清除所有主题类
+                singleView.className = 'user-planner';
+                
+                // 设置单视图的主题和标题
+                if (viewType === 'lanlan') {
+                    singleView.classList.add('lanlan-theme');
+                    document.querySelector('#singleView .user-header').textContent = '兰兰的计划';
+                    document.getElementById('viewLanlanBtn').classList.add('active');
+                } else {
+                    // 确保为xianxian正确设置主题和标题
+                    singleView.classList.add('xianxian-theme');
+                    document.querySelector('#singleView .user-header').textContent = '先先的计划';
+                    document.getElementById('viewXianxianBtn').classList.add('active');
+                }
+                
+                // 确保正确渲染当前用户的日历和统计
+                renderCalendar(viewType);
+                updateStats(viewType);
+            }
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 用户切换按钮
+            document.getElementById('viewLanlanBtn').addEventListener('click', () => switchView('lanlan'));
+            document.getElementById('viewXianxianBtn').addEventListener('click', () => switchView('xianxian'));
+            document.getElementById('viewBothBtn').addEventListener('click', () => switchView('both'));
+            
+            // 任务列表事件委托
+            document.getElementById('taskList').addEventListener('click', (e) => {
+                // 处理任务删除
+                if (e.target.classList.contains('task-delete') || e.target.tagName === 'BUTTON') {
+                    const index = parseInt(e.target.dataset.index);
+                    if (!isNaN(index)) {
+                        currentTasks.splice(index, 1);
+                        updateTaskIndices();
+                        
+                        // 保存更改到localStorage
+                        if (editingUser && selectedDate) {
+                            userData[editingUser][selectedDate].tasks = currentTasks;
+                            localStorage.setItem(`autonomyPlans_${editingUser}`, JSON.stringify(userData[editingUser]));
+                            // 更新统计数据
+                            updateStats(editingUser);
+                        }
+                    }
+                }
+                
+                // 处理任务完成状态变更
+                if (e.target.type === 'checkbox') {
+                    const index = parseInt(e.target.dataset.index);
+                    if (!isNaN(index) && currentTasks[index]) {
+                        currentTasks[index].completed = e.target.checked;
+                        const taskItem = e.target.closest('.task-item');
+                        if (taskItem) {
+                            taskItem.classList.toggle('completed-task', e.target.checked);
+                        }
+                        
+                        // 保存更改到localStorage
+                        if (editingUser && selectedDate) {
+                            userData[editingUser][selectedDate].tasks = currentTasks;
+                            localStorage.setItem(`autonomyPlans_${editingUser}`, JSON.stringify(userData[editingUser]));
+                            // 更新统计数据
+                            updateStats(editingUser);
+                        }
+                    }
+                }
+            });
+            
+            // 月份导航按钮（双视图）
+            document.querySelectorAll('.prev-month').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentDate.setMonth(currentDate.getMonth() - 1);
+                    const userPlanner = btn.closest('.user-planner');
+                    const user = userPlanner.id === 'lanlanPlanner' ? 'lanlan' : 
+                                userPlanner.id === 'xianxianPlanner' ? 'xianxian' : currentUser;
+                    renderCalendar(user);
+                });
+            });
+            
+            document.querySelectorAll('.next-month').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentDate.setMonth(currentDate.getMonth() + 1);
+                    const userPlanner = btn.closest('.user-planner');
+                    const user = userPlanner.id === 'lanlanPlanner' ? 'lanlan' : 
+                                userPlanner.id === 'xianxianPlanner' ? 'xianxian' : currentUser;
+                    renderCalendar(user);
+                });
+            });
+            
+            // 添加任务按钮
+            document.getElementById('addTaskBtn').addEventListener('click', () => {
+                const taskInput = document.getElementById('newTaskInput');
+                const taskText = taskInput.value.trim();
+                
+                if (taskText) {
+                    const newTask = {
+                        text: taskText,
+                        completed: false,
+                        timestamp: new Date().toISOString(),
+                        priority: 'normal' // 默认优先级
+                    };
+                    
+                    currentTasks.push(newTask);
+                    addTaskToDOM(taskText, false, currentTasks.length - 1);
+                    taskInput.value = '';
+                    
+                    // 保存更改到localStorage
+                    if (editingUser && selectedDate) {
+                        // 确保用户和日期数据结构存在
+                        if (!userData[editingUser]) {
+                            userData[editingUser] = {};
+                        }
+                        if (!userData[editingUser][selectedDate]) {
+                            userData[editingUser][selectedDate] = { tasks: [], completed: false };
+                        }
+                        userData[editingUser][selectedDate].tasks = currentTasks;
+                        localStorage.setItem(`autonomyPlans_${editingUser}`, JSON.stringify(userData[editingUser]));
+                        // 更新统计数据
+                        updateStats(editingUser);
+                    }
+                }
+            });
+            
+            // 回车添加任务
+            document.getElementById('newTaskInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('addTaskBtn').click();
+                }
+            });
+            
+            // 保存计划
+            document.getElementById('savePlanBtn').addEventListener('click', savePlan);
+            
+            // 标记为已完成
+            document.getElementById('markAsCompletedBtn').addEventListener('click', markAsCompleted);
+            
+            // 取消
+            document.getElementById('cancelPlanBtn').addEventListener('click', () => {
+                document.getElementById('planInputSection').style.display = 'none';
+                selectedDate = null;
+                editingUser = null;
+            });
+        }
+
+        // 更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('currentTime').textContent = `${year}-${month}-${day} ${hours}:${minutes}`;
+            
+            // 更新月份显示
+            updateMonthDisplays();
+            
+            // 无论是否选择了日期，只要计划输入区域可见，就更新为当前日期
+            const planInputSection = document.getElementById('planInputSection');
+            if (planInputSection.style.display !== 'none') {
+                const displayYear = now.getFullYear();
+                const displayMonth = now.getMonth() + 1;
+                const displayDay = now.getDate();
+                document.getElementById('selectedDateDisplay').textContent = `${displayYear}年${displayMonth}月${displayDay}日`;
+                
+                // 同时更新selectedDate为当前日期，确保数据一致性
+                selectedDate = `${year}-${month}-${day}`;
+            }
+        }
+        
+        // 更新所有月份显示
+        function updateMonthDisplays() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const monthText = `${year}年${month + 1}月`;
+            
+            // 更新所有月份显示元素
+            document.querySelectorAll('.current-month').forEach(el => {
+                el.textContent = monthText;
+            });
+        }
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            // 首先清空可能存在的旧数据，确保我们从干净状态开始
+            localStorage.removeItem('autonomyPlans_lanlan');
+            localStorage.removeItem('autonomyPlans_xianxian');
+            
+            // 初始化日期和测试数据
+            const today = new Date();
+            const dateKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            
+            // 创建结构化的测试数据
+            const testDataLanlan = {
+                [dateKey]: {
+                    tasks: [
+                        { text: '兰兰的任务1（已完成）', completed: true, timestamp: new Date().toISOString(), priority: 'high' },
+                        { text: '兰兰的任务2（进行中）', completed: false, timestamp: new Date().toISOString(), priority: 'normal' },
+                        { text: '兰兰的任务3（已完成）', completed: true, timestamp: new Date().toISOString(), priority: 'low' }
+                    ],
+                    completed: false
+                }
+            };
+            
+            const testDataXianxian = {
+                [dateKey]: {
+                    tasks: [
+                        { text: '先先的任务1（已完成）', completed: true, timestamp: new Date().toISOString(), priority: 'high' },
+                        { text: '先先的任务2（进行中）', completed: false, timestamp: new Date().toISOString(), priority: 'normal' },
+                        { text: '先先的任务3（进行中）', completed: false, timestamp: new Date().toISOString(), priority: 'low' },
+                        { text: '先先的任务4（已完成）', completed: true, timestamp: new Date().toISOString(), priority: 'high' }
+                    ],
+                    completed: false
+                }
+            };
+            
+            // 直接写入localStorage
+            localStorage.setItem('autonomyPlans_lanlan', JSON.stringify(testDataLanlan));
+            localStorage.setItem('autonomyPlans_xianxian', JSON.stringify(testDataXianxian));
+            
+            // 现在执行init()，它会从localStorage加载数据
+            init();
+            
+            // 确保DOM元素完全加载后再更新统计
+            setTimeout(() => {
+                // 重新渲染日历以显示测试数据
+                renderCalendars();
+                
+                // 强制更新两个用户的统计数据
+                updateStats('lanlan');
+                updateStats('xianxian');
+                
+                console.log('统计数据已更新');
+            }, 100);
+            
+            updateCurrentTime(); // 初始更新时间
+            setInterval(updateCurrentTime, 60000); // 每分钟更新一次
+        });
+    </script>
+</body>
+</html>
