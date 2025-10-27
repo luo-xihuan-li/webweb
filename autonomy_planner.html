@@ -310,12 +310,22 @@
 
         .calendar-day.planned {
             color: var(--danger);
-            background-color: rgba(231, 76, 60, 0.1);
+            background-color: rgba(231, 76, 60, 0.15);
+            border: 1px solid var(--danger);
+            font-weight: bold;
         }
 
         .calendar-day.completed {
             color: var(--success);
-            background-color: rgba(249, 168, 38, 0.1);
+            background-color: rgba(249, 168, 38, 0.15);
+            border: 1px solid var(--success);
+            font-weight: bold;
+        }
+        
+        .calendar-day.planned:hover,
+        .calendar-day.completed:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
         }
 
         /* 当前时间显示 */
@@ -528,6 +538,14 @@
             border-radius: var(--radius-lg);
             text-align: center;
             box-shadow: var(--shadow-sm);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .stat-value {
@@ -539,6 +557,127 @@
 
         .stat-label {
             color: var(--text-secondary);
+        }
+
+        /* 计划详情弹窗 */
+        .plan-details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 25%;
+            height: 50%;
+            background-color: blanchedalmond; /* 半透明背景 */
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .plan-details-content {
+            background-color: var(--bg-primary);
+            padding: var(--spacing-6);
+            border-radius: var(--radius-lg);
+            width: 85%;
+            max-width: 500px;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .plan-details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-4);
+            padding-bottom: var(--spacing-2);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .plan-details-header h3 {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .close-modal-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            line-height: 1;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--border-radius);
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        .close-modal-btn:hover {
+            background-color: var(--background-hover);
+            color: var(--text-primary);
+        }
+
+        .plan-date-info {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-3);
+        }
+
+        .plan-description {
+            margin-bottom: var(--spacing-4);
+            padding: var(--spacing-3);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .plan-tasks-list {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .plan-task-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-2);
+            margin-bottom: var(--spacing-2);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-secondary);
+        }
+
+        .plan-task-item.completed {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+
+        .plan-task-checkbox {
+            margin-right: var(--spacing-3);
+        }
+
+        .date-plans-container {
+            margin-top: var(--spacing-4);
+        }
+
+        .date-plan-item {
+            margin-bottom: var(--spacing-3);
+            padding: var(--spacing-3);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-secondary);
+            border-left: 3px solid var(--success);
+        }
+
+        .date-plan-item.planned {
+            border-left-color: var(--danger);
         }
 
         /* 响应式设计 */
@@ -716,39 +855,19 @@
                 </div>
             </div>
         </div>
-        <!-- 月份导航 -->
-        <div class="month-nav">
-            <button id="prevMonth">‹ 上个月</button>
-            <h2 id="currentMonth"></h2>
-            <button id="nextMonth">下个月 ›</button>
-        </div>
 
-        <!-- 统计信息 -->
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-value" id="completedCount">0</div>
-                <div class="stat-label">已完成计划</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="plannedCount">0</div>
-                <div class="stat-label">进行中计划</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="completionRate">0%</div>
-                <div class="stat-label">完成率</div>
-            </div>
-        </div>
 
-        <!-- 日历 -->
-        <div class="calendar">
-            <div class="calendar-header">日</div>
-            <div class="calendar-header">一</div>
-            <div class="calendar-header">二</div>
-            <div class="calendar-header">三</div>
-            <div class="calendar-header">四</div>
-            <div class="calendar-header">五</div>
-            <div class="calendar-header">六</div>
-            <!-- 日历单元格将由JavaScript动态生成 -->
+        <!-- 计划详情弹窗 -->
+        <div id="planDetailsModal" class="plan-details-modal">
+            <div class="plan-details-content">
+                <div class="plan-details-header">
+                    <h3 id="modalTitle">计划详情</h3>
+                    <button id="closeModalBtn" class="close-modal-btn">×</button>
+                </div>
+                <div id="modalDateInfo" class="plan-date-info"></div>
+                <div id="modalUserInfo" class="plan-date-info"></div>
+                <div id="datePlansContainer" class="date-plans-container"></div>
+            </div>
         </div>
 
         <!-- 计划输入区域 -->
@@ -792,6 +911,66 @@
             lanlan: JSON.parse(localStorage.getItem('autonomyPlans_lanlan')) || {},
             xianxian: JSON.parse(localStorage.getItem('autonomyPlans_xianxian')) || {}
         };
+        
+        // 如果localStorage中没有数据，添加一些示例数据用于测试
+        if (Object.keys(userData.lanlan).length === 0 && Object.keys(userData.xianxian).length === 0) {
+            // 添加今天和昨天的示例数据
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            const todayStr = formatDate(today);
+            const yesterdayStr = formatDate(yesterday);
+            
+            // 兰兰的示例数据
+            userData.lanlan = {
+                [todayStr]: {
+                    description: '今天的学习计划',
+                    tasks: [
+                        { text: '完成数学作业', completed: true, id: '1' },
+                        { text: '复习英语单词', completed: false, id: '2' },
+                        { text: '阅读课外书', completed: true, id: '3' }
+                    ],
+                    completed: false,
+                    updatedAt: new Date().toISOString()
+                },
+                [yesterdayStr]: {
+                    description: '昨天的学习计划',
+                    tasks: [
+                        { text: '做语文练习', completed: true, id: '4' },
+                        { text: '练习书法', completed: true, id: '5' }
+                    ],
+                    completed: true,
+                    updatedAt: yesterday.toISOString()
+                }
+            };
+            
+            // 先先的示例数据
+            userData.xianxian = {
+                [todayStr]: {
+                    description: '今天的工作计划',
+                    tasks: [
+                        { text: '完成项目报告', completed: true, id: '6' },
+                        { text: '参加团队会议', completed: true, id: '7' },
+                        { text: '回复客户邮件', completed: false, id: '8' },
+                        { text: '准备明天的演示', completed: false, id: '9' }
+                    ],
+                    completed: false,
+                    updatedAt: new Date().toISOString()
+                }
+            };
+            
+            // 保存示例数据到localStorage
+            localStorage.setItem('autonomyPlans_lanlan', JSON.stringify(userData.lanlan));
+            localStorage.setItem('autonomyPlans_xianxian', JSON.stringify(userData.xianxian));
+        }
         
         // 导入导出相关变量
         const importExportContainer = document.createElement('div');
@@ -923,15 +1102,14 @@
             // 设置标题和日期显示
             planTitle.textContent = `${user === 'lanlan' ? '兰兰' : '先先'}的计划`;
             
-            // 使用当前系统时间更新日期显示，而不是点击的日期
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            const currentMonth = now.getMonth() + 1;
-            const currentDay = now.getDate();
-            selectedDateDisplay.textContent = `${currentYear}年${currentMonth}月${currentDay}日`;
+            // 使用用户实际点击的日期，而不是当前系统时间
+            const displayMonth = month + 1; // 月份从0开始，需要加1
+            selectedDateDisplay.textContent = `${year}年${displayMonth}月${day}日`;
             
-            // 更新selectedDate为当前日期
-            selectedDate = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`;
+            // 使用用户点击的日期作为selectedDate
+            const formattedMonth = String(displayMonth).padStart(2, '0');
+            const formattedDay = String(day).padStart(2, '0');
+            selectedDate = `${year}-${formattedMonth}-${formattedDay}`;
             
             // 清空任务列表
             taskList.innerHTML = '';
@@ -1441,47 +1619,56 @@
 
         // 更新指定用户的统计信息
         function updateStats(user) {
-            // 确保userData和用户数据有效
-            if (!userData || !userData[user]) {
-                const completedCount = 0;
-                const plannedCount = 0;
-                const completionRate = 0;
-                
-                let completedElement, plannedElement, rateElement;
-                
-                if (document.getElementById('dualView').style.display !== 'none') {
-                    // 双视图模式
-                    completedElement = document.getElementById(`${user}Planner`).querySelector('#completedCount');
-                    plannedElement = document.getElementById(`${user}Planner`).querySelector('#plannedCount');
-                    rateElement = document.getElementById(`${user}Planner`).querySelector('#completionRate');
-                } else {
-                    // 单视图模式
-                    completedElement = document.querySelector('#singleView #completedCount');
-                    plannedElement = document.querySelector('#singleView #plannedCount');
-                    rateElement = document.querySelector('#singleView #completionRate');
-                }
-                
-                if (completedElement) completedElement.textContent = completedCount;
-                if (plannedElement) plannedElement.textContent = plannedCount;
-                if (rateElement) rateElement.textContent = `${completionRate}%`;
-                return;
-            }
-            
-            // 获取所有日期的计划
-            const datePlans = Object.values(userData[user]);
-            
-            // 统计所有任务
+            // 统计当月任务
             let totalTasks = 0;
             let completedTasks = 0;
             
-            datePlans.forEach(plan => {
-                if (plan && Array.isArray(plan.tasks)) {
-                    plan.tasks.forEach(task => {
-                        totalTasks++;
-                        if (task && task.completed) {
-                            completedTasks++;
-                        }
-                    });
+            // 获取当前显示的年份和月份
+            const currentYear = currentDate.getFullYear();
+            const currentMonth = currentDate.getMonth();
+            // 格式化月份为两位数字的字符串（01, 02, ..., 12）
+            const currentMonthStr = String(currentMonth + 1).padStart(2, '0');
+            const monthPrefix = `${currentYear}-${currentMonthStr}-`;
+            
+            // 首先尝试从localStorage重新加载数据，确保使用最新数据
+            const storedData = JSON.parse(localStorage.getItem(`autonomyPlans_${user}`)) || {};
+            
+            // 处理localStorage中的数据，只统计当前显示月份的数据
+            Object.entries(storedData).forEach(([dateKey, plan]) => {
+                // 检查日期键是否属于当前显示的月份
+                if (dateKey.startsWith(monthPrefix) && plan && typeof plan === 'object') {
+                    // 支持不同的数据格式
+                    if (Array.isArray(plan.tasks)) {
+                        // 标准格式：plan.tasks是任务数组
+                        plan.tasks.forEach(task => {
+                            if (task && task.text) {
+                                totalTasks++;
+                                if (task.completed === true) {
+                                    completedTasks++;
+                                }
+                            }
+                        });
+                    } else if (Array.isArray(plan)) {
+                        // 备选格式：plan本身是任务数组
+                        plan.forEach(task => {
+                            if (task && task.text) {
+                                totalTasks++;
+                                if (task.completed === true) {
+                                    completedTasks++;
+                                }
+                            }
+                        });
+                    } else if (plan.tasksArray && Array.isArray(plan.tasksArray)) {
+                        // 特殊格式：plan.tasksArray是任务数组
+                        plan.tasksArray.forEach(task => {
+                            if (task && task.text) {
+                                totalTasks++;
+                                if (task.completed === true) {
+                                    completedTasks++;
+                                }
+                            }
+                        });
+                    }
                 }
             });
             
@@ -1491,20 +1678,25 @@
             // 计算完成率
             const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
             
+            // 添加调试日志
+            console.log(`更新${user} ${monthPrefix.substring(0, 7)}的统计数据: 已完成=${completedTasks}, 总任务=${totalTasks}, 进行中=${inProgressTasks}, 完成率=${completionRate}%`);
+            
+            // 获取DOM元素
             let completedElement, plannedElement, rateElement;
             
             if (document.getElementById('dualView').style.display !== 'none') {
                 // 双视图模式
-                completedElement = document.getElementById(`${user}Planner`).querySelector('#completedCount');
-                plannedElement = document.getElementById(`${user}Planner`).querySelector('#plannedCount');
-                rateElement = document.getElementById(`${user}Planner`).querySelector('#completionRate');
+                completedElement = document.getElementById(`${user}Planner`).querySelector('.completed-count');
+                plannedElement = document.getElementById(`${user}Planner`).querySelector('.planned-count');
+                rateElement = document.getElementById(`${user}Planner`).querySelector('.completion-rate');
             } else {
                 // 单视图模式
-                completedElement = document.querySelector('#singleView #completedCount');
-                plannedElement = document.querySelector('#singleView #plannedCount');
-                rateElement = document.querySelector('#singleView #completionRate');
+                completedElement = document.querySelector('#singleView .completed-count');
+                plannedElement = document.querySelector('#singleView .planned-count');
+                rateElement = document.querySelector('#singleView .completion-rate');
             }
             
+            // 确保元素存在并更新内容
             if (completedElement) completedElement.textContent = completedTasks;
             if (plannedElement) plannedElement.textContent = inProgressTasks;
             if (rateElement) rateElement.textContent = `${completionRate}%`;
@@ -1548,6 +1740,25 @@
                 renderCalendar(viewType);
                 updateStats(viewType);
             }
+            
+            // 重新绑定统计标签的点击事件
+            setTimeout(() => {
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    // 移除已有的事件监听器
+                    const newCard = card.cloneNode(true);
+                    card.parentNode.replaceChild(newCard, card);
+                    
+                    // 添加新的事件监听器
+                    newCard.addEventListener('click', function() {
+                        const userPlanner = this.closest('.user-planner');
+                        const user = userPlanner.id === 'lanlanPlanner' ? 'lanlan' : 
+                                    userPlanner.id === 'xianxianPlanner' ? 'xianxian' : viewType;
+                        const year = currentDate.getFullYear();
+                        const month = currentDate.getMonth() + 1;
+                        showPlanDetails(user, year, month);
+                    });
+                });
+            }, 100);
         }
 
         // 设置事件监听器
@@ -1568,10 +1779,28 @@
                         
                         // 保存更改到localStorage
                         if (editingUser && selectedDate) {
-                            userData[editingUser][selectedDate].tasks = currentTasks;
-                            localStorage.setItem(`autonomyPlans_${editingUser}`, JSON.stringify(userData[editingUser]));
-                            // 更新统计数据
-                            updateStats(editingUser);
+                            if (currentTasks.length === 0 && !document.getElementById('planDescription').value.trim()) {
+                                // 显示确认对话框
+                                if (confirm('所有任务已删除且没有描述，是否要完全移除这个日期的计划？')) {
+                                    delete userData[editingUser][selectedDate];
+                                    localStorage.setItem(`autonomyPlans_${editingUser}`, JSON.stringify(userData[editingUser]));
+                                    // 重新渲染日历以移除高亮状态
+                                    renderCalendar(editingUser);
+                                    updateStats(editingUser);
+                                    // 隐藏输入区域
+                                    document.getElementById('planInputSection').style.display = 'none';
+                                } else {
+                                    // 用户取消删除，仍然保存更改
+                                    userData[editingUser][selectedDate].tasks = currentTasks;
+                                    localStorage.setItem(`autonomyPlans_${editingUser}`, JSON.stringify(userData[editingUser]));
+                                    updateStats(editingUser);
+                                }
+                            } else {
+                                // 仍然有任务或描述，只更新任务列表
+                                userData[editingUser][selectedDate].tasks = currentTasks;
+                                localStorage.setItem(`autonomyPlans_${editingUser}`, JSON.stringify(userData[editingUser]));
+                                updateStats(editingUser);
+                            }
                         }
                     }
                 }
@@ -1588,10 +1817,15 @@
                         
                         // 保存更改到localStorage
                         if (editingUser && selectedDate) {
+                            // 检查是否所有任务都已完成
+                            const allCompleted = currentTasks.every(task => task.completed);
                             userData[editingUser][selectedDate].tasks = currentTasks;
+                            userData[editingUser][selectedDate].completed = allCompleted;
                             localStorage.setItem(`autonomyPlans_${editingUser}`, JSON.stringify(userData[editingUser]));
                             // 更新统计数据
                             updateStats(editingUser);
+                            // 重新渲染日历以更新高亮状态
+                            renderCalendar(editingUser);
                         }
                     }
                 }
@@ -1605,6 +1839,7 @@
                     const user = userPlanner.id === 'lanlanPlanner' ? 'lanlan' : 
                                 userPlanner.id === 'xianxianPlanner' ? 'xianxian' : currentUser;
                     renderCalendar(user);
+                    updateStats(user);
                 });
             });
             
@@ -1615,6 +1850,7 @@
                     const user = userPlanner.id === 'lanlanPlanner' ? 'lanlan' : 
                                 userPlanner.id === 'xianxianPlanner' ? 'xianxian' : currentUser;
                     renderCalendar(user);
+                    updateStats(user);
                 });
             });
             
@@ -1671,6 +1907,145 @@
                 selectedDate = null;
                 editingUser = null;
             });
+
+            // 关闭计划详情弹窗
+            document.getElementById('closeModalBtn').addEventListener('click', closePlanDetailsModal);
+            document.getElementById('planDetailsModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('planDetailsModal')) {
+                    closePlanDetailsModal();
+                }
+            });
+
+            // 为统计标签添加点击事件
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const userPlanner = this.closest('.user-planner');
+                    const user = userPlanner.id === 'lanlanPlanner' ? 'lanlan' : 
+                                userPlanner.id === 'xianxianPlanner' ? 'xianxian' : currentUser;
+                    const year = currentDate.getFullYear();
+                    const month = currentDate.getMonth() + 1;
+                    showPlanDetails(user, year, month);
+                });
+            });
+        }
+
+        // 获取特定用户在特定月份的所有计划
+        function getPlansByMonth(user, year, month) {
+            const plans = [];
+            const monthPrefix = `${year}-${String(month).padStart(2, '0')}`;
+            
+            if (!userData[user]) {
+                return plans;
+            }
+            
+            Object.entries(userData[user]).forEach(([dateKey, plan]) => {
+                if (dateKey.startsWith(monthPrefix) && plan && typeof plan === 'object') {
+                    plans.push({
+                        date: dateKey,
+                        plan: plan
+                    });
+                }
+            });
+            
+            // 按日期排序
+            plans.sort((a, b) => a.date.localeCompare(b.date));
+            return plans;
+        }
+
+        // 显示计划详情弹窗
+        function showPlanDetails(user, year, month) {
+            const modal = document.getElementById('planDetailsModal');
+            const modalContent = document.querySelector('.plan-details-content');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDateInfo = document.getElementById('modalDateInfo');
+            const modalUserInfo = document.getElementById('modalUserInfo');
+            const datePlansContainer = document.getElementById('datePlansContainer');
+            
+            // 设置弹窗标题和信息
+            modalTitle.textContent = `${user === 'lanlan' ? '兰兰' : '先先'}的月度计划详情`;
+            modalDateInfo.textContent = `${year}年${month}月`;
+            modalUserInfo.textContent = `用户：${user === 'lanlan' ? '兰兰' : '先先'}`;
+            
+            // 获取并显示计划
+            const plans = getPlansByMonth(user, year, month);
+            
+            // 清空容器
+            datePlansContainer.innerHTML = '';
+            
+            if (plans.length === 0) {
+                const noPlansMsg = document.createElement('div');
+                noPlansMsg.textContent = '该月暂无计划';
+                noPlansMsg.style.textAlign = 'center';
+                noPlansMsg.style.padding = 'var(--spacing-4)';
+                noPlansMsg.style.color = 'var(--text-secondary)';
+                datePlansContainer.appendChild(noPlansMsg);
+            } else {
+                plans.forEach(({date, plan}) => {
+                    const datePlanItem = document.createElement('div');
+                    datePlanItem.className = `date-plan-item ${plan.completed ? 'completed' : 'planned'}`;
+                    
+                    // 格式化日期显示
+                    const dateObj = new Date(date);
+                    const formattedDate = `${dateObj.getMonth() + 1}月${dateObj.getDate()}日`;
+                    
+                    // 创建日期标题
+                    const dateHeader = document.createElement('h4');
+                    dateHeader.textContent = formattedDate;
+                    dateHeader.style.marginTop = 0;
+                    dateHeader.style.marginBottom = 'var(--spacing-2)';
+                    dateHeader.style.color = 'var(--text-primary)';
+                    
+                    // 添加计划描述（如果有）
+                    let planContent = '';
+                    if (plan.description) {
+                        const descriptionDiv = document.createElement('div');
+                        descriptionDiv.className = 'plan-description';
+                        descriptionDiv.textContent = plan.description;
+                        datePlanItem.appendChild(descriptionDiv);
+                    }
+                    
+                    // 添加任务列表
+                    const tasksList = document.createElement('div');
+                    tasksList.className = 'plan-tasks-list';
+                    
+                    if (Array.isArray(plan.tasks) && plan.tasks.length > 0) {
+                        plan.tasks.forEach(task => {
+                            const taskItem = document.createElement('div');
+                            taskItem.className = `plan-task-item ${task.completed ? 'completed' : ''}`;
+                            
+                            const checkbox = document.createElement('input');
+                            checkbox.type = 'checkbox';
+                            checkbox.className = 'plan-task-checkbox';
+                            checkbox.checked = task.completed;
+                            checkbox.disabled = true; // 只读模式
+                            
+                            const taskText = document.createElement('span');
+                            taskText.textContent = task.text;
+                            
+                            taskItem.appendChild(checkbox);
+                            taskItem.appendChild(taskText);
+                            tasksList.appendChild(taskItem);
+                        });
+                    }
+                    
+                    datePlanItem.appendChild(dateHeader);
+                    datePlanItem.appendChild(tasksList);
+                    datePlansContainer.appendChild(datePlanItem);
+                });
+            }
+            
+            // 重置滚动位置
+            if (modalContent) {
+                modalContent.scrollTop = 0;
+            }
+            
+            // 显示弹窗
+            modal.style.display = 'flex';
+        }
+
+        // 关闭计划详情弹窗
+        function closePlanDetailsModal() {
+            document.getElementById('planDetailsModal').style.display = 'none';
         }
 
         // 更新当前时间
